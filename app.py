@@ -286,16 +286,16 @@ def main():
     skip, reason = should_skip_renew(gate)
     if skip:
         print(f"⏭️ 无需续期: {reason}")
-        send_telegram_message(format_notification("⏭️ 无需续期", server_name=name,
-                                                  old=old, reason=str(reason)))
+        send_telegram_message(format_notification("⏭️ 续期时间未到", server_name=name,
+                                                  old=old))
         print("🏁 执行完毕：无需续期")
         return
 
     if page_has_limit_text():
         reason = "页面检测到 Renew Limit Reached，无需续期"
         print(f"⏭️ 无需续期: {reason}")
-        send_telegram_message(format_notification("⏭️ 无需续期", server_name=name,
-                                                  old=old, reason=reason))
+        send_telegram_message(format_notification("⏭️ 续期时间未到", server_name=name,
+                                                  old=old))
         print("🏁 执行完毕：无需续期")
         return
 
@@ -305,8 +305,8 @@ def main():
         ok, info = api_renew()
         if not ok and is_limit_error(info):
             print(f"⏭️ 服务端提示已达上限/冷却，视为无需续期: {info}")
-            send_telegram_message(format_notification("⏭️ 无需续期", server_name=name,
-                                                      old=old, reason=str(info)))
+            send_telegram_message(format_notification("⏭️ 续期时间未到", server_name=name,
+                                                      old=old))
             print("🏁 执行完毕：无需续期")
             return
 
@@ -317,8 +317,8 @@ def main():
         used_backup = True
         if not ok and is_limit_error(info):
             print(f"⏭️ 服务端提示已达上限/冷却，视为无需续期: {info}")
-            send_telegram_message(format_notification("⏭️ 无需续期", server_name=name,
-                                                      old=old, reason=str(info)))
+            send_telegram_message(format_notification("⏭️ 续期时间未到", server_name=name,
+                                                      old=old))
             print("🏁 执行完毕：无需续期")
             return
 
