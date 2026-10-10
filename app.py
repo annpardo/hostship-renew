@@ -44,7 +44,7 @@ def send_telegram_message(message: str):
         print(f"❌ Telegram 发送失败: {e}")
 
 def format_notification(status: str, server_name: str = "", old: str = "",
-                        new: str = "", error: str = "") -> str:
+                        new: str = "", error: str = "", reason: str = "") -> str:
     now = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(time.time() + 8 * 3600))
     lines = ["🎰 Host-ship 续期报告", "", f"{status}",
              f"📧 账号: {mask_email(EMAIL)}"]
@@ -55,6 +55,8 @@ def format_notification(status: str, server_name: str = "", old: str = "",
         lines.append(f"⏱ 续期后到期时间: {new}")
     elif old:
         lines.append(f"⏱ 续期前到期时间: {old}")
+    if reason:
+        lines.append(f"📝 原因: {reason}")
     if error:
         lines.append(f"⚠️ 错误信息: {error}")
     lines.append(f"🕒 执行时间: {now}(北京时间)")
@@ -285,7 +287,7 @@ def main():
     if skip:
         print(f"⏭️ 无需续期: {reason}")
         send_telegram_message(format_notification("⏭️ 无需续期", server_name=name,
-                                                  old=old, error=str(reason)))
+                                                  old=old, reason=str(reason)))
         print("🏁 执行完毕：无需续期")
         return
 
@@ -293,7 +295,7 @@ def main():
         reason = "页面检测到 Renew Limit Reached，无需续期"
         print(f"⏭️ 无需续期: {reason}")
         send_telegram_message(format_notification("⏭️ 无需续期", server_name=name,
-                                                  old=old, error=reason))
+                                                  old=old, reason=reason))
         print("🏁 执行完毕：无需续期")
         return
 
@@ -304,7 +306,7 @@ def main():
         if not ok and is_limit_error(info):
             print(f"⏭️ 服务端提示已达上限/冷却，视为无需续期: {info}")
             send_telegram_message(format_notification("⏭️ 无需续期", server_name=name,
-                                                      old=old, error=str(info)))
+                                                      old=old, reason=str(info)))
             print("🏁 执行完毕：无需续期")
             return
 
@@ -316,7 +318,7 @@ def main():
         if not ok and is_limit_error(info):
             print(f"⏭️ 服务端提示已达上限/冷却，视为无需续期: {info}")
             send_telegram_message(format_notification("⏭️ 无需续期", server_name=name,
-                                                      old=old, error=str(info)))
+                                                      old=old, reason=str(info)))
             print("🏁 执行完毕：无需续期")
             return
 
