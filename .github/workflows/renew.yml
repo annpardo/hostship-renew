@@ -2,7 +2,7 @@ name: Auto Renew Host-ship
 
 on:
   schedule:
-    - cron: '0 7 * * *' # 每天UTC 7点（北京时间15点）巡检一次，周期按面板文案再调
+    - cron: '0 0 20 * *' # 每天UTC 7点（北京时间15点）巡检一次，周期按面板文案再调
   workflow_dispatch:
 
 jobs:
